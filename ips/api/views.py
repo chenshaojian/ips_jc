@@ -18,6 +18,9 @@ def ips_knn(req):
     knn.knn_model()
     knn.predict()
     knn.erro()
+    knn.plot()
+    #data={'a':(knn.pred_y).tolist(),'b':(knn.test_y).tolist()}
     #data=a.get_createtime()
     #data=ReqRawData.bssid_list()
-    return HttpResponse(json.dumps('213')
+    data='123'
+    return HttpResponse(json.dumps(data))

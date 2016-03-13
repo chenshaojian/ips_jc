@@ -16,11 +16,55 @@ np.set_printoptions(threshold=np.nan)
 class AnalysisModel(object):
     def __init__(self):
         self.ave=None
+        self.pred_y=0
+        self.test_y=0
     def erro(self):
         self.ave=(abs(self.pred_y-self.test_y)).sum(0)/self.test_y.shape[0]
         print 'k=',self.k,' ave=',self.ave
-    #def predict(self):
-    #    self.pred_y = self.clf.predict(self.test_x)
+
+    def plot(self,floor_plan_file='gb_1_2402_948.JPG', output_file='gb_1_ips'):
+        im = plt.imread(floor_plan_file)
+        implot = plt.imshow(im)
+        im_rows = im.shape[0]
+        im_cols = im.shape[1]
+        p = copy(self.pred_y)
+        p[:,0],p[:,1]=p[:,0]/250,p[:,1]/120
+        r = copy(self.test_y)
+        r[:,0],r[:,1]=r[:,0]/250,r[:,1]/120
+        p[:,0] *= im_cols
+        r[:,0] *= im_cols
+        #flip y
+        p[:,1] = 1.0- p[:,1]
+        r[:,1] = 1.0- r[:,1]
+        p[:,1] *= im_rows
+        r[:,1] *= im_rows
+
+        scale = 15
+        #plt.scatter(p[:,0], p[:,1], c='r',s=scale)
+        #plt.scatter(r[:,0], r[:,1], c='b',s=scale)
+        rows = self.pred_y.shape[0]
+
+        labels = ['{0}'.format(i) for i in range(rows)]
+
+        size=2
+        X =[]
+        Y = []
+        for label, x, y,s,t in zip(labels, p[:, 0], p[:, 1], r[:,0], r[:,1]):
+                #if any([x, y, s,t]) is np.nan:
+                #print np.isnan([x,y,s,t])
+            if any(isnan([x,y,s,t])) is True:
+                continue
+            plt.annotate(label,xy = (x, y), ha = 'center', va = 'center',bbox = dict(boxstyle = 'round,pad=0.5', fc = 'yellow', alpha = 0.5),size=size)
+            plt.annotate(label,xy = (s, t), ha = 'center', va = 'center',bbox = dict(boxstyle = 'round,pad=0.5', fc = 'red', alpha = 0.5),size=size)
+            X.append(x)
+            X.append(s)
+            X.append(None)
+            Y.append(y)
+            Y.append(t)
+            Y.append(None)
+        plt.plot(X,Y)
+        plt.savefig(output_file, dpi=600)
+
 
 class TrainingData(AnalysisModel):
     def __init__(self):
@@ -59,7 +103,7 @@ class TrainingData(AnalysisModel):
             else:
                 j+=1
         self.data=array(data1)
-    def sample_training_set(self, test_size=0.2,random_state=3):
+    def sample_training_set(self, test_size=0.02,random_state=3):
         self.training_x, self.test_x, self.training_y, self.test_y = \
             cross_validation.train_test_split(self.data[:,0:-2], self.data[:,-2:], test_size = test_size, random_state = random_state)
         #print self.test_x
