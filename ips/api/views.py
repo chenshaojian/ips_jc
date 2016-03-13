@@ -18,12 +18,6 @@ def ips_knn(req):
     knn.knn_model()
     knn.predict()
     knn.erro()
-    #a=TrainingData()
-    #a.load_data()
-    #data=a.data
-    #a=MeasRawV1()
-    #data=a.load_all()
     #data=a.get_createtime()
-    print type(knn.data[1][-1])
-    #data='123'
-    return HttpResponse(knn.ave)
+    #data=ReqRawData.bssid_list()
+    return HttpResponse(json.dumps('213')

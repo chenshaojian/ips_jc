@@ -3,7 +3,8 @@ import MySQLdb as mdb
 import MySQLdb.cursors
 import datetime
 import numpy as np
-
+import requests
+import json
 conn = mdb.connect('localhost', 'root', 'zkkj20141101db', 'gb_ips')
 MIN_RSSI = -100
 
@@ -45,14 +46,53 @@ class MeasRawV1(MysqlAccesser):
         createtime2.sort(key=createtime1.index)
         return createtime1
 
+class ReqAccesser(object):
+    @classmethod
+    def postdata(cls,data):
+        url="http://120.25.86.215:8002/training/datarequest/"
+        #data = ['RSSI','x','y']
+        r=requests.post(url, {'data':data})
+        return json.loads(r.text)
+class ReqRawData(ReqAccesser):
+    @classmethod
+    def bssid_list(cls):
+        ###require bssid_list
+        bssid=json.dumps({'bssid':'True'})#data must be json
+        bssid_list=cls.postdata(bssid)
+        print bssid_list
+        return bssid_list
+    @classmethod
+    def load_all(cls,bssid_choice=['00:e1:40:20:00:6e','00:e1:40:20:00:d7','40:a5:ef:84:81:8d','40:a5:ef:84:7a:79','01']):
+        bssid_choice=json.dumps({'bssid_list':bssid_choice})
+        rows=cls.postdata(bssid_choice)
+        return rows
+    @classmethod
+    def get_createtime(cls):
+        createtime=json.dumps({'createtime':'01'})
+        createtime=cls.postdata(createtime)
+        return createtime
 
-class ReqRawData():
-    def bssid(request):
-        ###require brssi
-        bssid={'bssid':json.dumps('True')}#data must be json
-        bssid=datapost1(bssid)
-        a=datapost1({'ssid':json.dumps('True')})
-        print a
-        return HttpResponse(json.dumps({'bssid':a}))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

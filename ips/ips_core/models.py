@@ -19,8 +19,8 @@ class AnalysisModel(object):
     def erro(self):
         self.ave=(abs(self.pred_y-self.test_y)).sum(0)/self.test_y.shape[0]
         print 'k=',self.k,' ave=',self.ave
-    def predict(self):
-        self.pred_y = self.clf.predict(self.test_x)
+    #def predict(self):
+    #    self.pred_y = self.clf.predict(self.test_x)
 
 class TrainingData(AnalysisModel):
     def __init__(self):
@@ -37,10 +37,11 @@ class TrainingData(AnalysisModel):
         self.random_state=3
     def load_data(self):
         #load training data
-        raw_data = MeasRawV1.load_all()
-        raw_time=MeasRawV1.get_createtime()
+        #raw_data = MeasRawV1.load_all()
+        #raw_time=MeasRawV1.get_createtime()
         tra_bssid=['00:e1:40:20:00:6e','00:e1:40:20:00:d7','40:a5:ef:84:81:8d','40:a5:ef:84:7a:79','01']
-
+        raw_data=ReqRawData.load_all(tra_bssid)
+        raw_time=ReqRawData.get_createtime()
         data=zeros((len(raw_time),(len(tra_bssid)+1)))#[四个bssid ,x,y]
         for i in raw_data:
             data[raw_time.index(i['createtime'])][-2],data[raw_time.index(i['createtime'])][-1]=int(float(i["x"])*250),int(float(i["y"])*120)
@@ -73,6 +74,6 @@ class TrainingModel(TrainingData,AnalysisModel):
         self.clf = KNeighborsClassifier(n_neighbors =self.k)
         self.clf.fit(self.training_x,self.training_y)
         print("time spent:", time.time() - start_time)
-    #def predict(self):
-    #    self.pred_y = self.clf.predict(self.test_x)
+    def predict(self):
+        self.pred_y = self.clf.predict(self.test_x)
 
