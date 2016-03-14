@@ -77,7 +77,7 @@ class AnalysisModel(object):
         plotPro=[]
         for i in dis:
             plotDisX.append(i)
-            diff=dis_erro-i
+            diff=self.dis_erro-i
             y=diff[diff<0]
             error=len(y)*1.0/sum
             plotPro.append(error)
