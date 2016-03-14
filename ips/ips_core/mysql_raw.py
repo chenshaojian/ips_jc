@@ -5,7 +5,7 @@ import datetime
 import numpy as np
 import requests
 import json
-conn = mdb.connect('localhost', 'root', 'zkkj20141101db', 'gb_ips')
+conn = mdb.connect('120.25.86.215', 'root', 'zkkj20141101db', 'gb_ips')
 MIN_RSSI = -100
 
 class MysqlAccesser(object):
@@ -32,8 +32,7 @@ class MeasRawV1(MysqlAccesser):
     @classmethod
     def load_all(cls):
         rows = cls.load(cols='x,y,ssid,bssid,device_id,rssi,createtime',\
-                        where="ssid like 'GuangBai%' and market_id='005' and floor_id='01' and\
-                        bssid='00:e1:40:20:00:6e' or bssid='00:e1:40:20:00:d7' or bssid='40:a5:ef:84:81:8d' or bssid='40:a5:ef:84:7a:79'",\
+                        where="ssid like 'GuangBai%' and market_id='005' and floor_id='01'",\
                         table_name='training_raw_data',limit='1000')
         return rows
     @classmethod
@@ -59,7 +58,7 @@ class ReqRawData(ReqAccesser):
         ###require bssid_list
         bssid=json.dumps({'bssid':'True'})#data must be json
         bssid_list=cls.postdata(bssid)
-        print bssid_list
+        #print bssid_list
         return bssid_list
     @classmethod
     def load_all(cls,bssid_choice=['00:e1:40:20:00:6e','00:e1:40:20:00:d7','40:a5:ef:84:81:8d','40:a5:ef:84:7a:79','01']):

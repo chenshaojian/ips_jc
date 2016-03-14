@@ -70,25 +70,6 @@ class AnalysisModel(object):
             Y.append(None)
         plt.plot(X,Y)
         plt.savefig(output_file, dpi=600)
-    def error_plot(self):
-        sum=len(self.dis_erro)
-        dis=range(1,50)
-        plotDisX=[]
-        plotPro=[]
-        for i in dis:
-            plotDisX.append(i)
-            diff=dis_erro-i
-            y=diff[diff<0]
-            error=len(y)*1.0/sum
-            plotPro.append(error)
-        plt.scatter(plotDisX,plotPro, marker='o', color='b')
-        plt.plot(plotDisX,plotPro)
-        plt.xlabel('Distance(m)')
-        plt.ylabel('Prbability')
-        plt.title('Distance Error of IPS')
-        plt.ylim(0.0,1.0) 
-        plt.xlim(0,51) 
-        plt.savefig('gb_error_ips',dpi=600)
 
 
 class TrainingData(AnalysisModel):
